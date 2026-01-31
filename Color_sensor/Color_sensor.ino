@@ -21,7 +21,7 @@ void setup() {
 }
 
 void loop() {
- int color = getColor();
+ int color = getColor(5);
  if (color == 0) {
   Serial.println("White");
  }
@@ -42,39 +42,43 @@ void loop() {
  }
 }
 
-int getColor() {
+int getColor(int reps) {
   int red = 0;
   int green = 0;
   int blue = 0;
   int black = 0;
   int white = 0;
 
-  for (int i = 0; i < 5; i++) {
+  int R = 0;
+  int G = 0;
+  int B = 0;
+
+  for (int i = 0; i < reps; i++) {
     digitalWrite(S2,LOW);
     digitalWrite(S3,LOW);
     R = map(pulseIn(sensorOut, LOW), 340, 40, 0, 255);
-    delay(100);
+    delay(10);
 
     digitalWrite(S2, HIGH);
     digitalWrite(S3, HIGH);
     G = map(pulseIn(sensorOut, LOW), 310, 75, 0, 255);
-    delay(100);
+    delay(10);
 
     digitalWrite(S2, LOW);
     digitalWrite(S3, HIGH);
     B = map(pulseIn(sensorOut, LOW), 290, 60, 0, 255);
-    delay(100);
+    delay(10);
   }
 
   if (R >= 230 && G >= 230 && B >= 230) {
     white += 1;
   } else if (R <= 130 && G <= 130 && B <= 130) {
     black += 1;
-  } else if (R > G && R> B) {
+  } else if (R > G && R > B) {
     red += 1;
-  } else if (G > R && G> B) {
+  } else if (G > R && G > B) {
     green += 1;
-  } else if (B > G && B> R) {
+  } else if (B > G && B > R) {
     blue += 1;
   }
 
