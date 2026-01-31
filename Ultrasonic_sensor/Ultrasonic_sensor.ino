@@ -1,6 +1,10 @@
 #define Trig 10
 #define Echo 11
 
+//NOTE: based on minimal testing, ultrasonic sensor seems to overestimate by <=1cm
+// dead zone seems to be <5cm so not useful
+//doesnt work past 2.74 meters, at 1.4m is +-3cm and a bit unreliable/inconsistent
+
 float duration = 0;
 float distance = 0;
 
