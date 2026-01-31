@@ -4,16 +4,6 @@
 #define S3 7
 #define sensorOut 9
 
-int R = 0;
-int G = 0;
-int B = 0;
-
-int white=0;
-int black=0;
-int blue =0;
-int red = 0;
-int green =0;
-
 void setup() {
   // put your setup code here, to run once:
   pinMode(S0, OUTPUT);
@@ -31,89 +21,80 @@ void setup() {
 }
 
 void loop() {
-  white = 0;
-  black = 0;
-  red = 0;
-  blue = 0;
-  green = 0;
-  // put your main code here, to run repeatedly:
-    // Setting red filtered photodiodes to be read
-  while (white + black+red+blue+green < 5) {
-
-  digitalWrite(S2,LOW);
-  digitalWrite(S3,LOW);
-  // Reading the output frequency
-  R = pulseIn(sensorOut, LOW);
-  R = map(R, 340, 40, 0, 255);
-  // Printing the value on the serial monitor
- // Serial.print("R= ");//printing name
-  //Serial.print(R);//printing RED color frequency
-  //Serial.print("  ");
-  delay(100);
-
-  // Setting Green filtered photodiodes to be read
-  digitalWrite(S2,HIGH);
-  digitalWrite(S3,HIGH);
-  // Reading the output frequency
-  G = pulseIn(sensorOut, LOW);
-  G = map(G, 310, 75, 0, 255);
-  // Printing the value on the serial monitor
-  //Serial.print("G= ");//printing name
-  //Serial.print(G);//printing RED color frequency
-  //Serial.print("  ");
-  delay(100);
-
-  // Setting Blue filtered photodiodes to be read
-  digitalWrite(S2,LOW);
-  digitalWrite(S3,HIGH);
-  // Reading the output frequency
-  B = pulseIn(sensorOut, LOW);
-  B = map(B, 290, 60, 0, 255);
-  // Printing the value on the serial monitor
-  //Serial.print("B= ");//printing name
-  //Serial.print(B);//printing RED color frequency
-  //Serial.println("  ");
-  delay(100);
-
-if (R >= 230 && G >= 230 && B >= 230) {
-  white += 1;
-} else if (R <= 130 && G <= 130 && B <= 130) {
-  black += 1;
-} else if (R > G && R> B) {
-  red += 1;
-  } 
-  else if (G > R && G> B) {
-  green += 1;
-  }
-  else if (B > G && B> R) {
-  blue += 1;
-   }
-
-  }
-  if (red > white && red > blue && red > green & red > black) {
-    Serial.println("Red");
-
-  }
-Serial.println(" ");
+ int color = getColor();
+ if (color == 0) {
+  Serial.println("White");
+ }
+ if (color == 1) {
+   Serial.println("Black");
+ }
+ if (color == 2) {
+  Serial.println("Red");
+ }
+ if (color == 3) {
+  Serial.println("Green");
+ }
+ if (color == 4) {
+  Serial.println("Blue");
+ }
+ if (color == 5) {
+  Serial.println("HELP");
+ }
 }
 
-// int getColor() {
-//   int red = 0;
-//   int green = 0;
-//   int blue = 0;
-//   int black = 0;
-//   int white = 0;
+int getColor() {
+  int red = 0;
+  int green = 0;
+  int blue = 0;
+  int black = 0;
+  int white = 0;
 
-//   for (int i = 0; i < 5; i++) {
-//     digitalWrite(S2,LOW);
-//     digitalWrite(S3,LOW);
-//     R = map(pulseIn(sensorOut, LOW), 340, 40, 0, 255);
-//     delay(100);
+  for (int i = 0; i < 5; i++) {
+    digitalWrite(S2,LOW);
+    digitalWrite(S3,LOW);
+    R = map(pulseIn(sensorOut, LOW), 340, 40, 0, 255);
+    delay(100);
 
-//     digitalWrite(S2, HIGH);
-//     digitalWrite(S3, HIGH);
-//   }
-// }
+    digitalWrite(S2, HIGH);
+    digitalWrite(S3, HIGH);
+    G = map(pulseIn(sensorOut, LOW), 310, 75, 0, 255);
+    delay(100);
+
+    digitalWrite(S2, LOW);
+    digitalWrite(S3, HIGH);
+    B = map(pulseIn(sensorOut, LOW), 290, 60, 0, 255);
+    delay(100);
+  }
+
+  if (R >= 230 && G >= 230 && B >= 230) {
+    white += 1;
+  } else if (R <= 130 && G <= 130 && B <= 130) {
+    black += 1;
+  } else if (R > G && R> B) {
+    red += 1;
+  } else if (G > R && G> B) {
+    green += 1;
+  } else if (B > G && B> R) {
+    blue += 1;
+  }
+
+  if (white > blue && white > green && white > black && white > red) {
+    return 0;
+  }
+  if (black > blue && black > green && black > red && black > white) {
+    return 1;
+  }
+  if (red > blue && red > green && red > black && red > white) {
+    return 2;
+  }
+  if (green > blue && green > red && green > black && green > white) {
+    return 3;
+  }
+  if (blue > red && blue > green && blue > black && blue > white) {
+    return 4;
+  }
+  return 5;
+}
 
 //pure black on the target reads around 340 red, 310 green, 290 blue
 //pure black on the straight ramp reads 280 red, 260 green and 240 blue
