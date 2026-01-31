@@ -2,9 +2,17 @@
 #define S1 5
 #define S2 6
 #define S3 7
-#define sensorOut 8
+#define sensorOut 9
 
-int frequency = 0;
+int R = 0;
+int G = 0;
+int B = 0;
+
+int white=0;
+int black=0;
+int blue =0;
+int red = 0;
+int green =0;
 
 void setup() {
   // put your setup code here, to run once:
@@ -23,39 +31,89 @@ void setup() {
 }
 
 void loop() {
+  white = 0;
+  black = 0;
+  red = 0;
+  blue = 0;
+  green = 0;
   // put your main code here, to run repeatedly:
     // Setting red filtered photodiodes to be read
+  while (white + black+red+blue+green < 5) {
+
   digitalWrite(S2,LOW);
   digitalWrite(S3,LOW);
   // Reading the output frequency
-  frequency = pulseIn(sensorOut, LOW);
+  R = pulseIn(sensorOut, LOW);
+  R = map(R, 340, 40, 0, 255);
   // Printing the value on the serial monitor
-  Serial.print("R= ");//printing name
-  Serial.print(frequency);//printing RED color frequency
-  Serial.print("  ");
+ // Serial.print("R= ");//printing name
+  //Serial.print(R);//printing RED color frequency
+  //Serial.print("  ");
   delay(100);
 
   // Setting Green filtered photodiodes to be read
   digitalWrite(S2,HIGH);
   digitalWrite(S3,HIGH);
   // Reading the output frequency
-  frequency = pulseIn(sensorOut, LOW);
+  G = pulseIn(sensorOut, LOW);
+  G = map(G, 310, 75, 0, 255);
   // Printing the value on the serial monitor
-  Serial.print("G= ");//printing name
-  Serial.print(frequency);//printing RED color frequency
-  Serial.print("  ");
+  //Serial.print("G= ");//printing name
+  //Serial.print(G);//printing RED color frequency
+  //Serial.print("  ");
   delay(100);
 
   // Setting Blue filtered photodiodes to be read
   digitalWrite(S2,LOW);
   digitalWrite(S3,HIGH);
   // Reading the output frequency
-  frequency = pulseIn(sensorOut, LOW);
+  B = pulseIn(sensorOut, LOW);
+  B = map(B, 290, 60, 0, 255);
   // Printing the value on the serial monitor
-  Serial.print("B= ");//printing name
-  Serial.print(frequency);//printing RED color frequency
-  Serial.println("  ");
+  //Serial.print("B= ");//printing name
+  //Serial.print(B);//printing RED color frequency
+  //Serial.println("  ");
   delay(100);
+
+if (R >= 230 && G >= 230 && B >= 230) {
+  white += 1;
+} else if (R <= 130 && G <= 130 && B <= 130) {
+  black += 1;
+} else if (R > G && R> B) {
+  red += 1;
+  } 
+  else if (G > R && G> B) {
+  green += 1;
+  }
+  else if (B > G && B> R) {
+  blue += 1;
+   }
+
+  }
+  if (red > white && red > blue && red > green & red > black) {
+    Serial.println("Red");
+
+  }
+Serial.println(" ");
+}
+
+// int getColor() {
+//   int red = 0;
+//   int green = 0;
+//   int blue = 0;
+//   int black = 0;
+//   int white = 0;
+
+//   for (int i = 0; i < 5; i++) {
+//     digitalWrite(S2,LOW);
+//     digitalWrite(S3,LOW);
+//     R = map(pulseIn(sensorOut, LOW), 340, 40, 0, 255);
+//     delay(100);
+
+//     digitalWrite(S2, HIGH);
+//     digitalWrite(S3, HIGH);
+//   }
+// }
 
 //pure black on the target reads around 340 red, 310 green, 290 blue
 //pure black on the straight ramp reads 280 red, 260 green and 240 blue
@@ -69,4 +127,4 @@ void loop() {
 //path green reads 150 red, 80 green and 133 blue
 //when measuring the blue on the path, it reads 180-190 red, 130 green and 85 blue
 
-}
+
