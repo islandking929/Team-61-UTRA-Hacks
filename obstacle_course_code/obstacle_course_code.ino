@@ -66,13 +66,14 @@ void loop() {
 	float current_distance = AverageDist(5);
 	Serial.print("Current distance:");
 	Serial.println(current_distance);
-	delay(500);
+	delay(50);
 	if (current_distance < 20){
 		//hardcoded u turn
-	
+		TurnAroundObstacle(2);
+
 
 	}
-    while (color!=2){
+    while (color!=2 && color != 1){
       
       
       moveLeft();
@@ -88,12 +89,12 @@ void loop() {
 
     moveForward();
     delay(50);
+    
     stop();
-    delay(50);
     moveRight();
     delay(100);
     stop();
-    delay(50);
+    
     color = getColor(5);
     delay(50);
   
@@ -164,6 +165,36 @@ float AverageDist(int reps) {
 		i = i+1;
 	}
 	return averagedist/reps;
+}
+
+void TurnAroundObstacle(int targetcolor){
+	
+	int current_color = getColor(5);
+	moveRight();
+	delay(500);
+  
+  stop();
+	moveForward();
+	delay(1000);
+  stop();
+	moveLeft();
+	delay(500);
+  stop();
+	moveForward();
+	delay(1000);
+  stop();
+	moveLeft();
+	delay(500);
+  stop();
+  current_color = getColor(5);
+	while (getColor(5) != targetcolor){
+	moveForward();
+	delay(10);
+	current_color = getColor(5);
+	}
+  stop();
+	return;
+
 }
 
 float getUltrasonicDist() {
