@@ -67,13 +67,10 @@ void loop() {
 	Serial.print("Current distance:");
 	Serial.println(current_distance);
 	delay(50);
-	if (current_distance < 20){
-		//hardcoded u turn
-		TurnAroundObstacle(2);
+	
+  delay(20);
 
-
-	}
-    while (color!=2 && color != 1){
+    while (color!=2 && color != 1 && color != 4){
       
       
       moveLeft();
@@ -85,7 +82,12 @@ void loop() {
       color = getColor(5);
       delay(50);
     }
+ if (current_distance < 20 && current_distance !=0){
+		//hardcoded u turn
+		TurnAroundObstacle(2);
 
+
+	}
 
     moveForward();
     delay(50);
@@ -96,7 +98,7 @@ void loop() {
     stop();
     
     color = getColor(5);
-    delay(50);
+    
   
 
 
@@ -189,7 +191,9 @@ void TurnAroundObstacle(int targetcolor){
   current_color = getColor(5);
 	while (getColor(5) != targetcolor){
 	moveForward();
-	delay(10);
+	delay(100);
+  stop();
+  delay(20);
 	current_color = getColor(5);
 	}
   stop();
