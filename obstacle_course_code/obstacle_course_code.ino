@@ -1,5 +1,8 @@
 //This is the final code that we used which was able to follow the red line of the obstacle course, 
-//and successfully turn around the obstacles and find its way back to the red lie
+//and successfully turn around the obstacles and find its way back to the red lie. Earned us 4 points as we hit the box, 
+//but the robot got stuck on the box and if we reset we would lose as many points as successfully completing the course gave. 
+//We ended there and took the 4 points, which was good since at that testing station, no one had gotten positive scores
+//We later re-attempted the course (without the box) on our own and it successfully navigated it from start to finish, avoiding 2 obstacles
 
 
 //#define enA 9
