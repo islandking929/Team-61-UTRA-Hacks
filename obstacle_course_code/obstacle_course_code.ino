@@ -12,7 +12,17 @@
 #define S3 11
 #define sensorOut 9
 
+#define Trig 2
+#define Echo 3
+
 const int pwm10 = 26;
+
+//NOTE: based on minimal testing, ultrasonic sensor seems to overestimate by <=1cm
+// dead zone seems to be <5cm so not useful
+//doesnt work past 2.74 meters, at 1.4m is +-3cm and a bit unreliable/inconsistent
+
+float duration = 0;
+float distance =0;
 
 void setup() {
   // put your setup code here, to run once:
@@ -32,6 +42,11 @@ void setup() {
   digitalWrite(S0,HIGH);
   digitalWrite(S1,LOW);
 
+	//ultrasonic sensor pins
+	pinMode(Trig, OUTPUT);
+	pinMode(Echo, INPUT);
+
+
   
   pinMode(sensorOut, INPUT);
   //analogWrite(enA, pwm10);
@@ -45,8 +60,18 @@ void loop() {
   // put your main code here, to run repeatedly:
   int color = getColor(5);
 
-  //testing if the robot is on the black
 
+
+  //testing if the robot is on the black
+	float current_distance = AverageDist(5);
+	Serial.print("Current distance:");
+	Serial.println(current_distance);
+	delay(500);
+	if (current_distance < 20){
+		//hardcoded u turn
+	
+
+	}
     while (color!=2){
       
       
@@ -131,7 +156,26 @@ void brake() {
   digitalWrite(inB1, HIGH);
   digitalWrite(inB2, HIGH);
 }
+float AverageDist(int reps) {
+	int i =0;
+	float averagedist = 0;
+	while (i <reps) {
+		averagedist = averagedist + getUltrasonicDist();
+		i = i+1;
+	}
+	return averagedist/reps;
+}
 
+float getUltrasonicDist() {
+  digitalWrite(Trig, LOW);  
+	delayMicroseconds(2);  
+	digitalWrite(Trig, HIGH);  
+	delayMicroseconds(10);  
+	digitalWrite(Trig, LOW);
+
+  duration = pulseIn(Echo, HIGH); 
+  return (duration*0.0343)/2; 
+}
 
 int getColor(int reps) {
   int red = 0;
