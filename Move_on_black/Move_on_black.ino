@@ -6,6 +6,12 @@
 #define inB1 5
 #define inB2 4
 
+#define S0 13
+#define S1 12
+#define S2 10
+#define S3 11
+#define sensorOut 9
+
 const int pwm10 = 26;
 
 void setup() {
@@ -18,54 +24,52 @@ void setup() {
   pinMode(inB1, OUTPUT);
   pinMode(inB2, OUTPUT);
 
+  pinMode(S0, OUTPUT);
+  pinMode(S1, OUTPUT);
+  pinMode(S2, OUTPUT);
+  pinMode(S3, OUTPUT);
+
+  digitalWrite(S0,HIGH);
+  digitalWrite(S1,LOW);
+
+  
+  pinMode(sensorOut, INPUT);
   analogWrite(enA, pwm10);
   analogWrite(enB, pwm10);
-  moveForward();
+    Serial.begin(9600);
+  // moveForward();
 }
 
 void loop() {
+
   // put your main code here, to run repeatedly:
   int color = getColor(5);
-  if (color != 1) {
-    brake();
-    if (color == 0) {
-      bool foundBlack = false;
-      for (int i = 0; i < 3; i++) {
-        moveLeft();
-        delay(200);
-        brake();
-        color = getColor(5);
-        if (color == 1) {
-          foundBlack = true;
-          break;
-        }
-      }
-      if (!foundBlack) {
-        moveRight();
-        delay(600);
-        brake();
-        for (int i = 0; i < 3; i++) {
-          moveRight();
-          delay(200);
-          brake();
-          color = getColor(5);
-          if (color == 1) {
-            foundBlack = true;
-            break;
-          }
-        }
-      }
-      if (foundBlack) {
-        moveForward();
-      }
+
+  //testing if the robot is on the black
+
+    while (color!=1){
+      color = getColor(5);
+      moveLeft();
+      delay(20);
+      stop(); //or break
+    
     }
-  } else if (color == 2) {
 
-  } else if (color == 3) {
 
+    moveForward();
+    delay(20);
+    moveRight();
+    delay(20);
+    color = getColor(5);
+
+
+
+
+   
   }
 
-}
+
+
 
 
 void moveRightWheelClockwise() {
@@ -146,9 +150,8 @@ int getColor(int reps) {
     digitalWrite(S3, HIGH);
     B = map(pulseIn(sensorOut, LOW), 290, 60, 0, 255);
     delay(10);
-  }
 
-  if (R >= 230 && G >= 230 && B >= 230) {
+    if (R >= 230 && G >= 230 && B >= 230) {
     white += 1;
   } else if (R <= 130 && G <= 130 && B <= 130) {
     black += 1;
@@ -159,21 +162,30 @@ int getColor(int reps) {
   } else if (B > G && B > R) {
     blue += 1;
   }
+  }
+
+  
 
   if (white > blue && white > green && white > black && white > red) {
     return 0;
+    //color is white
   }
   if (black > blue && black > green && black > red && black > white) {
     return 1;
+    //color is black
   }
   if (red > blue && red > green && red > black && red > white) {
     return 2;
+    //color is red
   }
   if (green > blue && green > red && green > black && green > white) {
     return 3;
+
+    //color is green
   }
   if (blue > red && blue > green && blue > black && blue > white) {
     return 4;
+    //color is blue
   }
   return 5;
 }
