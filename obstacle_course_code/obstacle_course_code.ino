@@ -20,7 +20,7 @@ void loop() {
 	Serial.println(getUltrasonicDist());  
 	delay(500);
 
-	
+	//write if statement for if getutlrasonicdist <10, turn whatever
 }
 
 float getUltrasonicDist() {
